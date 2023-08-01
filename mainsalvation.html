@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salvexploration - Edmond Escalier</title>
+  <link rel="icon" type="image/png" href="/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/SalvX Favicon.png">
+  
+  <style>
+    @font-face {
+      font-family: 'Exo';
+      src: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/Exo/Exo-VariableFont_wght.ttf') format('truetype');
+      /* Ajoutez d'autres variantes de police si nécessaire */
+    }
+  
+    html {
+      scroll-behavior: inherit;
+    }
+  
+    body {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      background-repeat: repeat;
+      background-size: 100%;
+      background-position: center;
+      z-index: -5;
+      background-color: #000;
+      opacity:1;
+      transition: opacity 0.5s ease;
+    }
+
+    body.fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+  
+    .background-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+
+    }
+
+    .center-timeline .timeline {
+  left: 0;
+  right: 0;
+    }
+
+  
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0);
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      opacity: 1;
+      transition: transform 0.3s ease;
+    }
+  
+    .page.zoom-out {
+      transform: scale(1);
+      transition: transform 0.5s ease;
+    }
+  
+    .page.zoom-out.zoomed-out {
+      transform: scale(1.2);
+    }
+  
+    .header-fade-out {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    .header-fade-in {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+  
+    .header-fade-out.hidden {
+      visibility: hidden;
+    }
+  
+    .header-logo {
+      margin-top : 15px;  
+      width: 350px;
+      height: 100px;
+      margin-left: 390px;
+      background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/SalvX LOGO.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      cursor: pointer;
+      z-index: 999;
+    }
+  
+    .header-menu {
+      display: flex;
+      align-items: center;
+      margin-right: 350px;
+      margin-top : 30px; 
+    }
+  
+    .header-menu-item {
+      margin-right: 20px;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      font-family: 'Exo', sans-serif;
+      position: relative;
+    }
+  
+    .header-menu-item:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: #fff;
+    bottom: -2px;
+    right: 100%;
+    transform: translateX(100%); /* Modification : Ajoutez cette ligne */
+    transition: width 0.7s ease;
+    }
+
+  
+    .header-menu-item:hover:before {
+      width: 100%;
+    }
+  
+    .page-container.zoom-out {
+      transform: scale(1);
+      transition: transform 0.5s ease;
+    }
+  
+    .page-container.zoom-out.zoomed-out {
+      transform: scale(1.2);
+    }
+  
+    .custom-scroller {
+      height: 500px; /* Hauteur souhaitée de l'élément */
+      overflow-y: scroll; /* Activer le défilement vertical */
+      transform: translate3d(0px, -390px, 0px); /* Décalage initial de l'élément */
+    }
+  
+    .fade-in-list {
+      display: none;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.8);
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    .fade-in-list.active {
+      display: block;
+      opacity: 1;
+    }
+  
+    .fade-in-list-item {
+      color: #000;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px 0;
+    }
+  
+    .blur {
+      filter: blur(40%);
+      transition: filter 0.01s ease;
+    }
+  
+    .no-blur {
+      filter: blur(0);
+    }
+  
+    .timeline {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+  
+.timeline-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  
+    .timeline-line {
+      width: 2px;
+      height: 100%;
+      background-color: #000;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  
+    .timeline-event {
+      width: 20px;
+      height: 20px;
+      background-color: #000;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  
+    .arrow {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      transform: translateY(-0%);
+      width: 100%;
+      height: 4px;
+      background-color: #4800ff;
+      z-index: 2;
+    }
+  
+    .progress-arrow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1%;
+      height: 10%;
+      background-color: #ff0000;
+      z-index: 3;
+    }
+  
+    .events {
+      list-style: none;
+      padding: 5px;
+      margin: 0;
+      display: flex;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+  
+    .event {
+      position: relative;
+      width: auto;
+      padding: 5px;
+      background-color: #000;
+      color: #fff;
+      font-weight: bold;
+      font-family: 'Exo', sans-serif;
+      font-size: 25px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+     margin-right: 30px;
+    }
+  
+    .event-description {
+      font-family: 'Exo', sans-serif;
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      padding: 5px;
+      background-color: #000;
+      border: 3px solid #fff;
+      text-emphasis-color: #fff;
+      border-radius: 5px;
+      display: inline-block;
+      z-index: 4;
+      font-size: 20px;
+      margin-top: 25px;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      white-space: nowrap;
+      word-wrap: break-word;
+    }
+
+    .event-description.active {
+    opacity: 1;
+  }
+  
+    .event:hover .event-description {
+      display: block;
+    }
+  
+    .countdown-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: auto;
+      height: auto;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      padding: 5px;
+    }
+  
+    .countdown-item {
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      margin: 0;
+      padding: 5px;
+      font-family: 'Exo', sans-serif;
+    }
+  
+    .countdown-value {
+      font-size: 36px;
+      margin: 0;
+      font-family: 'Exo', sans-serif;
+    }
+  
+    .countdown-label {
+      margin: 0;
+    }
+  
+    .small-image {
+      position: absolute;
+      top: calc(100px + 60px);
+      left: 0;
+      width: 240px;
+      height: 135px;
+      margin-left: -15px;
+      margin-top :-130px;
+    }
+    
+    .page-container {
+      display: absolute;
+      flex-direction: column;
+      min-height: 100%;
+      min-width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
+    
+    .page .image-container {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .nothing {
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 200px;
+  font-family: 'Exo', sans-serif;
+  margin-left: 13px;
+  white-space: nowrap;
+  position: absolute;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-title1 {
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 200px;
+  font-family: 'Exo', sans-serif;
+  margin-left: 13px;
+  white-space: nowrap;
+  position: absolute;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+
+    .countdown-title {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  font-family: 'Exo', sans-serif;
+  margin-left: 20px;
+  white-space: nowrap;
+  position: absolute;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  bottom:80px;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  display:flex;
+  padding:5px;
+}
+
+  .strikethrough {
+  text-decoration: line-through;
+  }
+
+  .fade-in {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  }
+
+.fade-in.active {
+  opacity: 1;
+  }
+
+.timeline-title {
+  opacity: 1;
+  font-family: 'Exo', sans-serif;
+  font-size: 40px;
+  text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-transform: uppercase;
+  white-space: nowrap;
+  width: auto;
+  height: auto;
+  position: absolute;
+  letter-spacing: 1px;
+  align-items: center;
+  display: flex;
+  bottom: 460px;
+}
+  .timeline-title-fade-out {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    .timeline-title-fade-in {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+  
+    .timeline-title-fade-out.hidden {
+      visibility: hidden;
+    }
+
+.future-text {
+  opacity: 1;
+  color: #fff;
+  text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.4);
+  bottom:300px;
+  width: auto;
+  height: auto;
+  position: absolute;
+  white-space: nowrap;
+  align-items: center;
+  font-size: 22px;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 0.5px;
+  display: flex;
+}
+
+
+
+
+
+
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js"></script>
+</head>
+
+<body onload="activateScrollResistance()">
+  <div class="page-container">
+    <div class = "page">
+      <div class = "image-container" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/salvationmainmenu.jpg');">
+        <h2 class="timeline-title">OUR MISSIONS: </h2>
+        <h2 class="future-text"><ul>
+          <li>Become a multi-planetary species.</li>
+          <li>Provide access to Mars for all humans.</li>
+        </ul>
+        </h2>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/photocolonizationmars.jpeg');">
+        <h2 class ="timeline-title1">Class 1: Mission Objectives</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('1', 'Description de l\'événement 1.')" onmouseout="hideDescription('1')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-1"><ul>
+                <li>Define the scientific and exploratory objectives of the Martian mission</li></div>
+            </li>
+
+
+
+
+
+            
+
+            <li class="event" style="left: 50%;" onmouseover="showDescription('2', 'Description de l\'événement 2.')" onmouseout="hideDescription('2')">
+              <div class="date">2</div>
+              <div class="event-description" id="event-description-2"><ul>
+                <li>Identify the resources required to achieve these objectives</li></div>
+            </li>
+
+
+
+
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/panorama-milky-way-galaxy-with-stars-and-space-dus-2021-09-03-20-18-19-utc.jpg');">
+        <h2 class ="timeline-title1">Class 2: Human Resources</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('3', 'Description de l\'événement 3.')" onmouseout="hideDescription('3')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-3">
+                <ul>
+                  <li>Crew selection and training:</li>
+                  <li>I. Evaluation of potential candidates</li>
+                  <li>II. Selection of crew members based on specific criteria</li>
+                  <li>III. Technical and scientific training of crew members</li>
+                  <li>IV. Emergency and crisis management training</li>
+                  <li>V. Physical and psychological training for resilience in a space environment</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('4', 'Description de l\'événement 4.')" onmouseout="hideDescription('4')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-4">
+                    <ul>
+                      <li>Skills and qualifications required:</li>
+                      <li>I. Identification of skills required for each role in the crew</li>
+                      <li>II. Definition of required qualifications and certifications</li>
+                      <li>III. Assessment of technical, scientific, and operational skills of candidates</li>
+                      <li>IV. Verification of candidates' backgrounds, references, and experiences</li>
+                      <li>V. Final selection based on required skills for the Martian mission</li>
+                    </ul>    
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('5', 'Description de l\'événement 5.')" onmouseout="hideDescription('5')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-5">
+                        <ul>
+                          <li>Team and human resources management:</li>
+                          <li>I. Planning the team's organizational structure</li>
+                          <li>II. Assigning roles and responsibilities within the crew</li>
+                          <li>III. Performance and productivity management of the team</li>
+                          <li>IV. Continuous training and professional development of crew members</li>
+                          <li>V. Conflict management and problem resolution within the team</li>
+                        </ul>     
+                        <li class="event" style="left: 50%;" onmouseover="showDescription('6', 'Description de l\'événement 6.')" onmouseout="hideDescription('6')">
+                          <div class="date">4</div>
+                          <div class="event-description" id="event-description-6">
+                            <ul>
+                              <li>Crew health and well-being:</li>
+                              <li>I. Comprehensive medical evaluation of crew members</li>
+                              <li>II. Design and implementation of health and fitness programs</li>
+                              <li>III. Regular monitoring of physical and mental health of crew members</li>
+                              <li>IV. Management of medical risks and preparation for medical emergencies</li>
+                              <li>V. Psychological support and stress management to ensure crew well-being</li>
+                            </ul>                              
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/rosette-nebula-and-stars-2021-08-29-12-27-08-utc.jpg');">
+        <h2 class ="timeline-title1">Class 3: Required Technologies</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('7', 'Description de l\'événement 7.')" onmouseout="hideDescription('7')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-7">
+                <ul>
+                    <li>Space propulsion:</li>
+                    <li>I. Research and development of advanced propulsion technologies</li>
+                    <li>II. Evaluation of different propulsion options for the Martian mission</li>
+                    <li>III. Design and construction of propulsion systems tailored to mission needs</li>
+                    <li>IV. Integration of propulsion systems into the spacecraft</li>
+                    <li>V. Testing and performance verification of propulsion systems prior to departure</li>
+                </ul>
+          <li class="event" style="left: 50%;" onmouseover="showDescription('8', 'Description de l\'événement 8.')" onmouseout="hideDescription('8')">
+            <div class="date">2</div>
+            <div class="event-description" id="event-description-8">
+              <ul>
+                  <li>Life support systems:</li>
+                  <li>I. Study and development of air, water, and waste recycling systems</li>
+                  <li>II. Creation of oxygen production and air filtration technologies</li>
+                  <li>III. Design and integration of water purification and storage systems</li>
+                  <li>IV. Management of food and resource supply for the crew</li>
+                  <li>V. Testing and verification of life support systems to ensure optimal functioning</li>
+              </ul>
+              <li class="event" style="left: 50%;" onmouseover="showDescription('9', 'Description de l\'événement 9.')" onmouseout="hideDescription('9')">
+                <div class="date">3</div>
+                <div class="event-description" id="event-description-9">
+                  <ul>
+                      <li>Communication and navigation:</li>
+                      <li>I. Establishment of long-distance communication systems</li>
+                      <li>II. Selection and installation of antennas and receivers for space communications</li>
+                      <li>III. Development of secure communication protocols and data exchange</li>
+                      <li>IV. Integration of precise navigation systems for the journey to Mars</li>
+                      <li>V. Testing and simulation of communication and navigation systems under real conditions</li>
+                  </ul>
+                  <li class="event" style="left: 50%;" onmouseover="showDescription('10', 'Description de l\'événement 10.')" onmouseout="hideDescription('10')">
+                    <div class="date">4</div>
+                    <div class="event-description" id="event-description-10">
+                      <ul>
+                          <li>Energy management:</li>
+                          <li>I. Evaluation of energy requirements for the Martian mission</li>
+                          <li>II. Design and installation of renewable energy production systems</li>
+                          <li>III. Power supply management for onboard equipment and systems</li>
+                          <li>IV. Energy efficiency optimization to maximize spacecraft autonomy</li>
+                          <li>V. Monitoring and maintenance of energy systems to ensure reliable operation</li>
+                      </ul>
+                      <li class="event" style="left: 50%;" onmouseover="showDescription('11', 'Description de l\'événement 11.')" onmouseout="hideDescription('11')">
+                        <div class="date">5</div>
+                        <div class="event-description" id="event-description-11">
+                          <ul>
+                              <li>Radiation protection systems:</li>
+                              <li>I. Study of the effects of cosmic radiation on astronauts</li>
+                              <li>II. Design and construction of radiation protection systems</li>
+                              <li>III. Integration of specific materials and shielding to minimize risks</li>
+                              <li>IV. Ongoing monitoring of radiation levels aboard the spacecraft</li>
+                              <li>V. Planning and preparedness for radiation-related emergencies</li>
+                          </ul>
+              </div>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/night-sky-star-trails-2021-08-26-15-50-18-utc.jpg');">
+        <h2 class ="timeline-title1">Class 4: Logistics and Supply</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('12', 'Description de l\'événement 12.')" onmouseout="hideDescription('12')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-12">
+                <ul>
+                  <li>Resource and supply planning:</li>
+                  <li>I. Evaluation of material and logistical resource requirements for the mission</li>
+                  <li>II. Planning for food, water, oxygen, fuel, etc., supplies</li>
+                  <li>III. Identification of suppliers and partners for necessary resources</li>
+                  <li>IV. Development of a supply schedule based on mission requirements</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('13', 'Description de l\'événement 13.')" onmouseout="hideDescription('13')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-13">
+                    <ul>
+                      <li>Waste management and recycling:</li>
+                      <li>I. Design and installation of waste management systems onboard the spacecraft</li>
+                      <li>II. Development of recycling processes to maximize resource utilization</li>
+                      <li>III. Implementation of waste sorting, storage, and disposal protocols</li>
+                      <li>IV. Monitoring and maintenance of waste management systems during the journey</li>
+                      <li>V. Replenishment of recyclable materials and resources as needed</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('14', 'Description de l\'événement 14.')" onmouseout="hideDescription('14')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-14">
+                        <ul>
+                            <li>Risk and contingency management:</li>
+                            <li>I. Identification of major risks associated with the Martian mission</li>
+                            <li>II. Evaluation and analysis of potential risks to crew and spacecraft</li>
+                            <li>III. Development of risk management plans and mitigation strategies</li>
+                            <li>IV. Crew training in emergency procedures and crisis management</li>
+                            <li>V. Ongoing risk monitoring and adjustment of plans in response to unforeseen events</li>
+                        </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/SpaceX Starship launching from Mars Base Alpha_humanMars.net.jpg');">
+        <h2 class ="timeline-title1">Class 5: Mars and Space Environment</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('15', 'Description de l\'événement 15.')" onmouseout="hideDescription('15')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-15">
+                <ul>
+                    <li>Study and exploration of Mars:</li>
+                    <li>I. Data collection and information gathering from previous exploration missions</li>
+                    <li>II. Analysis of Mars' geological, atmospheric, and topographic characteristics</li>
+                    <li>III. Assessment of environmental risks and specific constraints related to Mars</li>
+                    <li>IV. Study of potential resources present on Mars for utilization during the mission</li>
+                    <li>V. Use of simulations and models to better understand the Martian environment</li>
+                </ul>
+            </li>
+            <li class="event" style="left: 50%;" onmouseover="showDescription('16', 'Description de l\'événement 16.')" onmouseout="hideDescription('16')">
+              <div class="date">2</div>
+              <div class="event-description" id="event-description-16">
+                <ul>
+                    <li>Habitat and Infrastructure on Mars:</li>
+                    <li>I. Design and construction of habitats suitable for Martian conditions</li>
+                    <li>II. Development of protection systems against extreme temperatures and radiation</li>
+                    <li>III. Establishment of support infrastructure for activities on Mars (research stations, workshops, etc.)</li>
+                    <li>IV. Planning logistics for installation and maintenance of habitats and infrastructure</li>
+                    <li>V. Monitoring and maintenance of facilities throughout the mission duration</li>
+                </ul>
+            </li>
+            <li class="event" style="left: 50%;" onmouseover="showDescription('17', 'Description de l\'événement 17.')" onmouseout="hideDescription('17')">
+              <div class="date">3</div>
+              <div class="event-description" id="event-description-17">
+                <ul>
+                    <li>Exploration and Scientific Research:</li>
+                    <li>I. Definition of scientific objectives for the Martian mission</li>
+                    <li>II. Selection of instruments and equipment required for experiments</li>
+                    <li>III. Collection of soil, rock, and atmospheric samples for in-depth analysis</li>
+                    <li>IV. Analysis of collected data to better understand Mars' history and composition</li>
+                    <li>V. Contribution to scientific knowledge about the possibility of life on Mars</li>
+                </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/milky-way-at-night-natural-universe-space-landsca-2022-12-16-04-38-10-utc.jpg');">
+        <h2 class ="timeline-title1">Class 6: Space Communication and Navigation</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('1', 'Description de l\'événement 1.')" onmouseout="hideDescription('1')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-18">
+                <ul>
+                    <li>Communication systems:</li>
+                    <li>I. Establishment of a reliable communication network between Earth and Mars</li>
+                    <li>II. Selection and installation of communication equipment on board the spacecraft</li>
+                    <li>III. Development of communication protocols and transmission/reception frequencies</li>
+                    <li>IV. Crew training in the use of communication systems</li>
+                    <li>V. Ongoing monitoring of communication quality during the mission</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('19', 'Description de l\'événement 19.')" onmouseout="hideDescription('19')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-19">
+                    <ul>
+                        <li>Spacecraft navigation and guidance:</li>
+                        <li>I. Flight trajectory planning to reach Mars efficiently</li>
+                        <li>II. Use of star-based and celestial landmark navigation systems</li>
+                        <li>III. Calculation of trajectory corrections and necessary adjustments during the journey</li>
+                        <li>IV. Crew training in astronomical navigation and use of navigation instruments</li>
+                        <li>V. Tracking and verification of spacecraft position throughout the duration of the journey</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('20', 'Description de l\'événement 20.')" onmouseout="hideDescription('20')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-20">
+                        <ul>
+                            <li>Time Management and Synchronization:</li>
+                            <li>I. Coordination of activities based on day/night cycles on Mars</li>
+                            <li>II. Establishing a precise schedule for key mission operations</li>
+                            <li>III. Synchronization of clocks and measurement systems between Earth and Mars</li>
+                            <li>IV. Planning rest, work, and leisure phases for the crew based on Martian time</li>
+                            <li>V. Use of specialized software and tools to manage time and synchronization</li>
+                        </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/milky-way-galaxy-with-stars-and-space-dust-in-the-2021-08-29-19-18-58-utc.jpg');">
+        <h2 class ="timeline-title1">Class 7: Resource Supply</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('21', 'Description de l\'événement 21.')" onmouseout="hideDescription('21')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-20">
+                <ul>
+                    <li>Study and exploitation of Martian resources:</li>
+                    <li>I. Evaluation of available resources on Mars (water, minerals, etc.)</li>
+                    <li>II. Development of extraction and purification techniques for resources</li>
+                    <li>III. Utilization of mining technologies adapted to the Martian environment</li>
+                    <li>IV. Planning the use of local resources to reduce supply needs from Earth</li>
+                    <li>V. Monitoring and quality control of extracted resources on Mars</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('22', 'Description de l\'événement 22.')" onmouseout="hideDescription('22')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-22">
+                    <ul>
+                        <li>Food and Water Supply:</li>
+                        <li>I. Selection and cultivation of edible plants in simulated Martian conditions</li>
+                        <li>II. Development of autonomous and sustainable food production systems</li>
+                        <li>III. Recycling and reuse of water to minimize supply needs</li>
+                        <li>IV. Storage and preservation of food to ensure availability throughout the mission</li>
+                        <li>V. Monitoring water and food quality to ensure crew food safety</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('23', 'Description de l\'événement 23.')" onmouseout="hideDescription('23')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-23">
+                        <ul>
+                            <li>Supply Management:</li>
+                            <li>I. Planning and tracking supplies based on mission requirements</li>
+                            <li>II. Establishment of protocols for resource reception, storage, and distribution</li>
+                            <li>III. Optimization of quantities and supply frequencies based on consumption and planned activities</li>
+                            <li>IV. Inventory management and ordering to maintain adequate supply</li>
+                            <li>V. Troubleshooting supply issues and seeking alternative solutions when necessary</li>
+                        </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/SuperHeavy_Starship_SpaceX.jpg');">
+        <h2 class ="timeline-title1">Class 8: Safety and Risk Management</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('24', 'Description de l\'événement 24.')" onmouseout="hideDescription('24')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-24">
+                <ul>
+                    <li>Risk analysis and safety planning:</li>
+                    <li>I. Identification of potential risks associated with the Martian mission</li>
+                    <li>II. Evaluation of consequences and probabilities associated with each identified risk</li>
+                    <li>III. Development of risk management plans to minimize negative impacts</li>
+                    <li>IV. Implementation of safety protocols for operations and emergency situations</li>
+                    <li>V. Crew training in safety procedures and evacuation protocols</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('25', 'Description de l\'événement 25.')" onmouseout="hideDescription('25')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-25">
+                    <ul>
+                        <li>Emergency Situations Management:</li>
+                        <li>I. Development of emergency plans to address critical incidents (malfunctions, accidents, etc.)</li>
+                        <li>II. Crew training in response procedures for emergency situations</li>
+                        <li>III. Creation of backup and redundancy systems to ensure continuity of operations</li>
+                        <li>IV. Implementation of communication and coordination protocols in case of emergencies</li>
+                        <li>V. Regular simulations and training to prepare for emergency situations</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('26', 'Description de l\'événement 26.')" onmouseout="hideDescription('26')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-26">
+                        <ul>
+                            <li>Safety and Crew Protection:</li>
+                            <li>I. Implementation of safety measures to protect the crew from space radiation</li>
+                            <li>II. Development of confinement systems and radiation shielding</li>
+                            <li>III. Regular medical monitoring of the crew to detect and address potential health issues</li>
+                            <li>IV. Planning and implementation of quarantine and infection control protocols</li>
+                            <li>V. Management of crew mental health and psychological well-being during the mission</li>
+                        </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/sd87gh54gd4h5fd42sf8d7g8df8g-1280x720.jpg');">
+        <h2 class ="timeline-title1">Class 9: Financing and Support</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('27', 'Description de l\'événement 27.')" onmouseout="hideDescription('27')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-27">
+                <ul>
+                    <li>Obtaining sufficient funding to cover the costs of the Martian space mission</li>
+                    <li>I. Development of funding proposals and budget planning for the mission</li>
+                    <li>II. Engagement with government agencies and organizations for funding opportunities</li>
+                    <li>III. Exploration of partnerships with private investors and commercial space industry</li>
+                    <li>IV. Implementation of fundraising campaigns and initiatives</li>
+                    <li>V. Financial management and oversight throughout the mission</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('28', 'Description de l\'événement 28.')" onmouseout="hideDescription('28')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-28">
+                    <ul>
+                        <li>Collaboration with private and public partners to provide financial and technological support for the mission</li>
+                        <li>I. Identification and engagement of potential partners in the private sector</li>
+                        <li>II. Negotiation and establishment of collaborative agreements and contracts</li>
+                        <li>III. Sharing of resources, expertise, and technology with partner organizations</li>
+                        <li>IV. Coordination of joint research and development projects</li>
+                        <li>V. Ongoing communication and collaboration with partners throughout the mission</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('29', 'Description de l\'événement 29.')" onmouseout="hideDescription('29')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-29">
+                        <ul>
+                            <li>Public and media outreach to generate interest and support for the Martian mission</li>
+                            <li>I. Development of public engagement strategies and communication plans</li>
+                            <li>II. Organization of public events, exhibitions, and conferences to promote the mission</li>
+                            <li>III. Creation of informative materials and media content about the mission</li>
+                            <li>IV. Engagement with media outlets for press coverage and interviews</li>
+                            <li>V. Interaction with the public through social media, websites, and other channels</li>
+                        </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <div class="image-container timeline-container center-timeline" style="background-image: url('/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/Curiosity-MSL-Mars.jpg');">
+        <h2 class ="timeline-title1">Class 10: Validation and Approval</h2>
+        <div class="timeline">
+          <div class="arrow"></div>
+          <div class="progress-arrow" style="width: 4.5%;"></div>
+          <ul class="events">
+            <li class="event" style="left: 50%;" onmouseover="showDescription('30', 'Description de l\'événement 30.')" onmouseout="hideDescription('30')">
+              <div class="date">1</div>
+              <div class="event-description" id="event-description-30">
+                <ul>
+                    <li>Conducting tests and simulations to validate systems and technologies before the mission</li>
+                    <li>I. Development of testing plans and protocols for spacecraft systems</li>
+                    <li>II. Execution of rigorous testing procedures to evaluate system performance</li>
+                    <li>III. Analysis of test results and identification of areas for improvement</li>
+                    <li>IV. Iterative refinement and retesting of systems to ensure optimal functionality</li>
+                    <li>V. Documentation of test procedures and outcomes for future reference</li>
+                </ul>
+                <li class="event" style="left: 50%;" onmouseover="showDescription('31', 'Description de l\'événement 31.')" onmouseout="hideDescription('31')">
+                  <div class="date">2</div>
+                  <div class="event-description" id="event-description-31">
+                    <ul>
+                        <li>Performing tests in simulated Martian environments to assess equipment and material resilience</li>
+                        <li>I. Creation of simulated Martian environments to replicate surface conditions</li>
+                        <li>II. Testing of equipment, materials, and structures in simulated environments</li>
+                        <li>III. Evaluation of performance, durability, and adaptability of components</li>
+                        <li>IV. Identification of potential weaknesses and vulnerabilities in the equipment</li>
+                        <li>V. Incorporation of findings into design improvements and modifications</li>
+                    </ul>
+                    <li class="event" style="left: 50%;" onmouseover="showDescription('32', 'Description de l\'événement 32.')" onmouseout="hideDescription('32')">
+                      <div class="date">3</div>
+                      <div class="event-description" id="event-description-32">
+                        <ul>
+                            <li>Reviewing and validating all plans, procedures, and protocols for the space mission</li>
+                            <li>I. Comprehensive review of mission plans, including technical and operational aspects</li>
+                            <li>II. Verification of adherence to safety, regulatory, and ethical guidelines</li>
+                            <li>III. Assessment of feasibility, risk mitigation measures, and contingency plans</li>
+                            <li>IV. Collaboration with experts and authorities for independent validation</li>
+                            <li>V. Finalization of plans and documentation before mission execution</li>
+                        </ul>
+                        <li class="event" style="left: 50%;" onmouseover="showDescription('33', 'Description de l\'événement 33.')" onmouseout="hideDescription('33')">
+                          <div class="date">4</div>
+                          <div class="event-description" id="event-description-33">
+                            <ul>
+                                <li>Obtaining final approval from competent authorities and experts to confirm readiness for the Martian space mission</li>
+                                <li>I. Presentation of mission plans and supporting documentation to authorities</li>
+                                <li>II. Addressing queries, concerns, and feedback from authorities and experts</li>
+                                <li>III. Conducting technical reviews and assessments as required</li>
+                                <li>IV. Collaboration with regulatory bodies to ensure compliance with relevant regulations</li>
+                                <li>V. Receiving official approval and authorization to proceed with the mission</li>
+                            </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="background-image"></div>
+  <div class="header">
+    <div class="header-logo" onclick="navigateTo('mainmenu.html')"></div>
+    <div class="header-menu">
+      <div class="header-menu-item" onclick="navigateTo('index.html')">SALVATION</div>
+      <div class="header-menu-item" onclick="navigateTo('spacex.html')">SPACEX</div>
+      <div class="header-menu-item" onclick="navigateTo('sfair.html')">SFAIR</div>
+      <div class="header-menu-item" onclick="navigateTo('careers.html')">CAREERS</div>
+      <div class="header-menu-item" onclick="navigateTo('about.html')">ABOUT</div>
+      <div class="header-menu-item" onclick="navigateTo('contact.html')">CONTACT</div>
+    </div>
+  </div>
+
+  <div class="fade-in-list" id="fade-in-list">
+    <div class="fade-in-list-item" onclick="navigateTo('index.html')">SALVATION</div>
+    <div class="fade-in-list-item" onclick="navigateTo('spacex.html')">SPACEX</div>
+    <div class="fade-in-list-item" onclick="navigateTo('sfair.html')">SFAIR</div>
+    <div class="fade-in-list-item" onclick="navigateTo('careers.html')">CAREERS</div>
+    <div class="fade-in-list-item" onclick="navigateTo('about.html')">ABOUT</div>
+    <div class="fade-in-list-item" onclick="navigateTo('contact.html')">CONTACT</div>
+
+  </div>
+
+  <div class="countdown-container">
+    <h2 class="countdown-title">T- NEXT_EVENT</h2>
+    <div class="countdown-item">
+      <h2 class="countdown-value" id="days"></h2>
+      <p class="countdown-label">DAYS</p>
+    </div>
+    <div class="countdown-item">
+      <h2 class="countdown-value" id="hours"></h2>
+      <p class="countdown-label">HOURS</p>
+    </div>
+    <div class="countdown-item">
+      <h2 class="countdown-value" id="minutes"></h2>
+      <p class="countdown-label">MINUTES</p>
+    </div>
+    <div class="countdown-item">
+      <h2 class="countdown-value" id="seconds"></h2>
+      <p class="countdown-label">SECONDS</p>
+    </div>
+  </div>
+
+  <img class="small-image" src="/Users/edseeevedm/Desktop/DOWNLOAD GOOGLE/template.png" alt="Small Image">
+
+  <script>
+
+     // Définir la date de fin du compte à rebours (format : année, mois indexé à partir de 0, jour, heure, minute, seconde)
+  const endDate = new Date(2023, 11, 20, 23, 0, 0);
+
+function countdown() {
+  const currentDate = new Date();
+  const totalSeconds = Math.floor((endDate - currentDate) / 1000);
+
+  // Calculer le nombre de jours, heures, minutes et secondes restants
+  const days = Math.floor(totalSeconds / (24 * 60 * 60));
+  const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+
+  // Mettre à jour les éléments HTML du compte à rebours
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = hours;
+  document.getElementById('minutes').textContent = minutes;
+  document.getElementById('seconds').textContent = seconds;
+}
+
+// Mettre à jour le compte à rebours chaque seconde
+setInterval(countdown, 1000);
+
+
+    // Créer une instance de ScrollMagic.Controller
+    function smoothscroll(target, duration) {
+  var targetElement = document.querySelector(target);
+  var targetPosition = targetElement.getBoundingClientRect().top;
+  var startPosition = window.pageYOffset || document.documentElement.scrollTop;
+  var distance = targetPosition - startPosition;
+  var startTime = null;
+
+  function animation(currentTime) {
+    if (startTime === null) {
+      startTime = currentTime;
+    }
+    var timeElapsed = currentTime - startTime;
+    var scrollY = ease(timeElapsed, startPosition, distance, duration);
+    window.scrollTo(0, scrollY);
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  }
+
+  function ease(t, b, c, d) {
+    // Fonction d'interpolation pour créer un effet de défilement en douceur
+    t /= d / 2;
+    if (t < 1) return (c / 2) * t * t + b;
+    t--;
+    return (-c / 2) * (t * (t - 2) - 1) + b;
+  }
+
+  requestAnimationFrame(animation);
+}
+  
+      function navigateTo(url) {
+      window.location.href = url;
+      }
+  
+      function activateScrollResistance() {
+  const header = document.querySelector('.header');
+  const timelineTitle = document.querySelector('.timeline-title');
+  const scrollThreshold = 100; // Marge de défilement en pixels pour la disparition du titre et de l'entête
+
+  let previousScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  let isHeaderVisible = true;
+  let isTitleVisible = true;
+
+  window.addEventListener('scroll', function () {
+    let currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (currentScrollPosition > previousScrollPosition) {
+      // L'utilisateur fait défiler vers le bas
+      if (window.scrollY > scrollThreshold && isHeaderVisible) {
+        header.classList.remove('header-fade-in');
+        header.classList.add('header-fade-out');
+        isHeaderVisible = false;
+      }
+      if (window.scrollY > scrollThreshold && isTitleVisible) {
+        timelineTitle.classList.add('timeline-title-fade-out');
+        timelineTitle.classList.remove('timeline-title-fade-in');
+        isTitleVisible = false;
+      }
+    } else {
+      // L'utilisateur fait défiler vers le haut
+      if (!isHeaderVisible) {
+        header.classList.remove('header-fade-out');
+        header.classList.add('header-fade-in');
+        isHeaderVisible = true;
+      }
+      if (!isTitleVisible) {
+        timelineTitle.classList.add('timeline-title-fade-in');
+        timelineTitle.classList.remove('timeline-title-fade-out');
+        isTitleVisible = true;
+      }
+    }
+
+    previousScrollPosition = currentScrollPosition;
+  });
+}
+
+
+
+
+
+  
+    const pages = document.querySelectorAll('.page');
+    const pageContainer = document.querySelector('.page-container');
+  
+    let currentPageIndex = 0;
+  
+    function zoomOut() {
+      pageContainer.classList.remove('zoom-out');
+      pageContainer.classList.add('zoomed-out');
+    }
+  
+    function zoomIn() {
+      pageContainer.classList.remove('zoomed-out');
+      pageContainer.classList.add('zoom-out');
+    }
+  
+    function navigateToPage(index) {
+      if (index >= 0 && index < pages.length) {
+        currentPageIndex = index;
+        pageContainer.style.transform = `translateX(-${currentPageIndex * 100}%)`;
+        zoomIn();
+      }
+    }
+  
+    function navigateNext() {
+      if (currentPageIndex < pages.length - 1) {
+        currentPageIndex++;
+        pageContainer.style.transform = `translateX(-${currentPageIndex * 100}%)`;
+        zoomIn();
+      }
+    }
+  
+    function navigatePrevious() {
+      if (currentPageIndex > 0) {
+        currentPageIndex--;
+        pageContainer.style.transform = `translateX(-${currentPageIndex * 100}%)`;
+        zoomIn();
+      }
+    }
+  
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowRight') {
+        navigateNext();
+      } else if (event.key === 'ArrowLeft') {
+        navigatePrevious();
+      }
+    });
+  
+    // Fonction pour réinitialiser l'entête lorsqu'il n'y a pas de défilement actif
+    function resetHeader() {
+      const header = document.querySelector('.header');
+      header.style.transform = 'translateY(0)';
+      header.classList.remove('hidden');
+    }
+  
+    // Activation de la résistance de défilement
+    activateScrollResistance();
+  
+    // Réinitialisation de l'entête lors du chargement de la page
+    document.addEventListener('DOMContentLoaded', function () {
+      resetHeader();
+    });
+  
+    // Appel initial de la fonction de zoom/dézoom
+    zoomOut();
+  
+    // Sélection de l'élément de défilement
+    var scroller = document.getElementById('scroller');
+  
+    // Fonction pour effectuer le défilement
+    function scrollToPosition(position) {
+      scroller.style.transform = 'translate3d(0px, ' + position + 'px, 0px)';
+    }
+  
+    window.addEventListener('scroll', function () {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var scrollHeight = document.documentElement.scrollHeight;
+      var windowHeight = window.innerHeight;
+      var scrollPercentage = (scrollTop / (scrollHeight - windowHeight)) * 100;
+      var translateY = -((scrollPercentage / 100) * (1080 - windowHeight));
+  
+      document.querySelector('.background-image').style.transform = 'translateY(' + translateY + 'px)';
+    });
+
+    requestAnimationFrame(animation);
+
+    function showDescription(eventId) {
+  var eventDescription = document.getElementById('event-description-' + eventId);
+  eventDescription.classList.add('active');
+}
+
+function hideDescription(eventId) {
+  var eventDescription = document.getElementById('event-description-' + eventId);
+  eventDescription.classList.remove('active');
+}
+
+function navigateTo(url) {
+      document.body.classList.add('fade-out'); // Ajoute la classe pour déclencher le fondu sortant
+
+      setTimeout(function() {
+        window.location.href = url; // Redirige vers l'URL après la transition
+      }, 1000); // Temps de transition en millisecondes (ajustez selon vos besoins)
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('fade-in'); // Ajoute la classe pour déclencher le fondu entrant
+
+      setTimeout(function() {
+        document.body.classList.remove('fade-in'); // Supprime la classe après la transition
+      }, 2000); // Temps de transition en millisecondes (ajustez selon vos besoins)
+    });
+
+
+
+
+
+
+  </script>
+  
+
+</body>
+
+</html>
